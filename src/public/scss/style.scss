@@ -1,0 +1,61 @@
+/**
+  Page CSS style
+ */
+ // TODO: delete this style rules
+.template__main {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(30deg, #ffddbd, #e4f1cb);
+}
+
+.template__main__h1 {
+  font-size: 45pt;
+}
+
+.template__link:hover {
+  text-decoration: underline;
+}
+
+.template__buttons {
+  margin-top: 2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.template__button {
+  border: 1px solid black;
+  margin-right: 3em;
+  display: flex;
+  align-items: center;
+  transition: all ease-in-out .3s;
+}
+
+.template__button:hover {
+  transform: scale(1.1);
+  transition: all ease-in-out .3s;
+  box-shadow: 5px 5px 10px black;
+}
+
+.template__button__logo {
+  background-color: black;
+  color: white;
+  height: 100%;
+  padding: .5em;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.template__button__label {
+  padding: 0 1em;
+  text-transform: uppercase;
+}
+
+.template__img {
+  width: 200px;
+}
