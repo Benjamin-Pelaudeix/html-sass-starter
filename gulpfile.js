@@ -177,9 +177,8 @@ function watchFiles() {
 /**
  * Parallel functions
  */
-const buildSeries = gulp.series(clear, minifyHtml, watchAndCompileScss, minifyAndAutoPrefixingCss, moveFont, minifyImg);
 const dev = gulp.series(watchAndCompileScss, gulp.parallel(watchHtmlScss, browserReload));
-const build = gulp.series(buildSeries, gulp.parallel(watchFiles));
+const build = gulp.series(clear, minifyHtml, watchAndCompileScss, minifyAndAutoPrefixingCss, moveFont, minifyImg);
 
 /**
  * Functions exportation
