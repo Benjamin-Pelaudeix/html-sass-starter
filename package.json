@@ -10,6 +10,7 @@
     "gulp-clean-css": "^4.3.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-imagemin": "^7.0.1",
+    "gulp-jsmin": "^0.1.5",
     "gulp-plumber": "^1.2.1",
     "gulp-sass": "^5.0.0"
   },

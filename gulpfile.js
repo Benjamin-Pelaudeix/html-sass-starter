@@ -21,6 +21,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const cssMinify = require('gulp-clean-css');
 const htmlMinify = require('gulp-htmlmin');
 const imgMinify = require('gulp-imagemin');
+const jsMinify = require('gulp-jsmin');
 
 /**
  * Variables
@@ -48,18 +49,25 @@ const paths = {
     src: './src/public/font/**/*',
     dist: './dist/public/font/',
   },
+  js: {
+    src: './src/public/js/**/*.js',
+    dist: './dist/public/js/',
+  },
 };
 const browser = browserSync.create();
 
 /**
- * Function: default starter behaviour
+ * @function
+ * @description default starter behaviour
+ * @returns string message
  */
 function defaultStarter() {
   return 'No default behaviour. Please check README.md file for more informations';
 }
 
 /**
- * Function: reload browser on changes
+ * @function
+ * @description reload browser on changes
  */
 function browserReload() {
   browser.init({
@@ -71,14 +79,18 @@ function browserReload() {
 }
 
 /**
- * Function: clean 'dist/' folder
+ * @function
+ * @description clean 'dist/' folder
+ * @returns Promise
  */
 function clear() {
   return del([distFolder]);
 }
 
 /**
- * Function: watch changes on HTML files
+ * @function
+ * @description watch changes on HTML files
+ * @returns gulp
  */
 function watchHtml() {
   return (
@@ -89,7 +101,9 @@ function watchHtml() {
 }
 
 /**
- * Function: watch changes & compile SCSS files
+ * @function
+ * @description watch changes & compile SCSS files
+ * @returns gulp
  */
 function watchAndCompileScss() {
   return (
@@ -102,7 +116,9 @@ function watchAndCompileScss() {
 }
 
 /**
- * Function: minify HTML files
+ * @function
+ * @description minify HTML files
+ * @returns gulp
  */
 function minifyHtml() {
   return (
@@ -116,7 +132,9 @@ function minifyHtml() {
 }
 
 /**
- * Function: minify & auto-prefixing CSS files
+ * @function
+ * @description minify & auto-prefixing CSS files
+ * @returns gulp
  */
 function minifyAndAutoPrefixingCss() {
   return (
@@ -131,7 +149,9 @@ function minifyAndAutoPrefixingCss() {
 }
 
 /**
- * Function: move fonts to 'dist/' folder
+ * @function
+ * @description move fonts to 'dist/' folder
+ * @returns gulp
  */
 function moveFont() {
   return (
@@ -144,7 +164,9 @@ function moveFont() {
 }
 
 /**
- * Function: minify images
+ * @function
+ * @description minify images
+ * @returns gulp
  */
 function minifyImg() {
   return (
@@ -158,27 +180,49 @@ function minifyImg() {
 }
 
 /**
- * Function: parallel HTML & SCSS files watch
+ * @function
+ * @description watch JS files changes to update browser sync
+ * @returns gulp
  */
-function watchHtmlScss() {
-  gulp.watch(paths.scss.src, watchAndCompileScss);
-  gulp.watch(paths.html.src, watchHtml);
+function watchJs() {
+  return (
+    gulp
+      .src(paths.js.src, { since: gulp.lastRun(watchJs) })
+      .pipe(plumber())
+      .pipe(browser.stream())
+  );
 }
 
 /**
- * Function: parallel all files watch
+ * @function
+ * @description minify JS files and copy to dist/ folder
+ * @returns gulp
  */
-function watchFiles() {
+function minifyJs() {
+  return (
+    gulp
+      .src(paths.js.src)
+      .pipe(plumber())
+      .pipe(jsMinify())
+      .pipe(gulp.dest(paths.js.dist))
+  );
+}
+
+/**
+ * @function
+ * @description parallel HTML & SCSS files watch
+ */
+function watchHtmlScssJs() {
   gulp.watch(paths.scss.src, watchAndCompileScss);
-  gulp.watch(paths.css.src, minifyAndAutoPrefixingCss);
-  gulp.watch(paths.html.src, minifyHtml);
+  gulp.watch(paths.html.src, watchHtml);
+  gulp.watch(paths.js.src, watchJs);
 }
 
 /**
  * Parallel functions
  */
-const dev = gulp.series(watchAndCompileScss, gulp.parallel(watchHtmlScss, browserReload));
-const build = gulp.series(clear, minifyHtml, watchAndCompileScss, minifyAndAutoPrefixingCss, moveFont, minifyImg);
+const dev = gulp.series(watchAndCompileScss, gulp.parallel(watchHtmlScssJs, browserReload));
+const build = gulp.series(clear, minifyHtml, watchAndCompileScss, minifyAndAutoPrefixingCss, moveFont, minifyImg, minifyJs);
 
 /**
  * Functions exportation
