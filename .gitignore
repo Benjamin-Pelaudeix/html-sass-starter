@@ -1,0 +1,11 @@
+# node_modules
+node_modules
+
+# .idea (Jetbrains config)
+.idea
+
+# .vscode (VSCode config)
+.vscode
+
+# dist
+dist
